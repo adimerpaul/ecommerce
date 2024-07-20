@@ -1,22 +1,56 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+  <q-layout view="lhh Lpr lFf">
+    <q-header
+      style="border-radius:  0 0 0 20px;"
+    >
+<!--      <q-toolbar>-->
+<!--        <q-btn-->
+<!--          flat-->
+<!--          dense-->
+<!--          round-->
+<!--          icon="menu"-->
+<!--          aria-label="Menu"-->
+<!--          @click="toggleLeftDrawer"-->
+<!--        />-->
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+<!--        <q-toolbar-title>-->
+<!--          Quasar App-->
+<!--        </q-toolbar-title>-->
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
+<!--        <div>Quasar v{{ $q.version }}</div>-->
+<!--      </q-toolbar>-->
+      <div class="row">
+        <div class="col-12 col-md-1"></div>
+        <div class="col-12 col-md-10 row items-center">
+          <q-avatar size="50px" class="q-ma-xs">
+            <q-img src="logo.png"/>
+          </q-avatar>
+          <q-space/>
+<!--          3 botone s megusta nuscar menu-->
+          <q-btn-group flat >
+            <q-btn
+              flat
+              round
+              icon="fa-solid fa-heart"
+              aria-label="Like"
+            />
+            <q-btn
+              flat
+              round
+              icon="fa-solid fa-search"
+              aria-label="Search"
+            />
+            <q-btn
+              flat
+              round
+              icon="menu"
+              aria-label="Menu"
+              @click="toggleLeftDrawer"
+            />
+          </q-btn-group>
+        </div>
+        <div class="col-12 col-md-1"></div>
+      </div>
     </q-header>
 
 <!--    <q-drawer-->
@@ -40,6 +74,13 @@
 <!--    </q-drawer>-->
 
     <q-page-container>
+<!--       que este flotante al lado superioro izquiero-->
+      <div style="position: relative">
+        <div style="position: absolute;height: 40px;width: 100%" class="bg-primary">
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 40px; background-color: white; border-radius: 0 20px 0 0">
+          </div>
+        </div>
+      </div>
       <router-view />
     </q-page-container>
   </q-layout>
