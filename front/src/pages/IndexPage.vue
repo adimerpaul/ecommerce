@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-md">
+  <q-page class="q-pa-xs">
     <div class="row">
       <div class="col-12 col-md-1"></div>
       <div class="col-12 col-md-10">
@@ -70,7 +70,6 @@
                     $ {{ product.precio }}
                   </div>
                   <q-space/>
-                  <!--                    subrayar-->
                   <div class="text-grey-7 text-bold q-pa-xs text-center line-through" v-if="product.precioAnterior">
                     $ {{ product.precioAnterior }}
                   </div>
@@ -80,9 +79,59 @@
           </div>
         </div>
       </div>
+      <div class="col-12">
+        <template v-for="(categoriesProduct, index) in categoriesProducts" :key="index">
+          <div class="row">
+            <div class="col-12">
+              <div class="text-h6 text-bold q-ma-md">
+                {{ categoriesProduct.nombre }}
+              </div>
+            </div>
+            <div class="col-12">
+              <div style="overflow-x: auto; white-space: nowrap; display: flex; justify-content: flex-start;">
+                <div style="overflow-x: auto; white-space: nowrap; display: flex; justify-content: flex-start;width: 100%;">
+                  <div v-for="(product, index) in categoriesProduct.products" :key="index" >
+                    <q-card  class="q-ma-sm" style="width: 280px;" flat bordered>
+                      <q-card-section horizontal>
+                        <q-img
+                          class="col-4"
+                          :src="`${$url}../images/${product.imagen1}`"
+                          height="120px"
+                        />
+                        <q-card-actions vertical class="justify-around q-px-md">
+                          <div class="text-grey-7 text-bold"
+                               style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;width: 165px;">
+                            {{ product.titulo }}
+                          </div>
+                          <div class="text-grey-7"
+                                style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;width: 165px;"
+                          >
+                            {{ product.descripcion }}
+                          </div>
+                          <div class="row items-center">
+                            <div class="text-blue-7 text-bold">
+                              $ {{ product.precio }}
+                            </div>
+                            <q-space/>
+                            <div class="text-grey-7 text-bold line-through" v-if="product.precioAnterior">
+                              $ {{ product.precioAnterior }}
+                            </div>
+                            <q-space/>
+                            <q-btn size="8px" color="primary" unelevated icon="fa-solid fa-angles-right" aria-label="Like" />
+                          </div>
+                        </q-card-actions>
+                      </q-card-section>
+                    </q-card>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
     </div>
 <!--    <pre>{{masVendidos}}</pre>-->
-    <pre>{{categoriesProducts}}</pre>
+<!--    <pre>{{categoriesProducts}}</pre>-->
   </q-page>
 </template>
 
@@ -104,29 +153,39 @@ export default {
   },
   methods: {
     productsGet() {
-      this.categories.push({ id: 0, nombre: "Todos" });
+      // Inicializa las categorías con la opción "Todos"
+      this.categories = [{ id: 0, nombre: "Todos" }];
+      this.categoriesProducts = [];
+
+      // Realiza la solicitud para obtener los productos
       this.$axios
         .get("products")
         .then((response) => {
           this.products = response.data;
+
+          // Itera sobre cada producto
           response.data.forEach((product) => {
+            // Agrega la categoría si no existe en this.categories
             if (!this.categories.find((category) => category.id === product.category_id)) {
-              // console.log(product);
               this.categories.push({
                 id: product.category_id,
                 nombre: product.category.name,
               });
             }
-            if(!this.categoriesProducts.find((category) => category.id === product.category_id)){
-              this.categoriesProducts.push({
+
+            // Encuentra o crea la categoría en this.categoriesProducts
+            let categoryProducts = this.categoriesProducts.find((category) => category.id === product.category_id);
+            if (!categoryProducts) {
+              categoryProducts = {
                 id: product.category_id,
                 nombre: product.category.name,
-                products: [product],
-              });
-            }else{
-              const index = this.categoriesProducts.findIndex((category) => category.id === product.category_id);
-              this.categoriesProducts[index].products.push(product);
+                products: [],
+              };
+              this.categoriesProducts.push(categoryProducts);
             }
+
+            // Agrega el producto a la categoría correspondiente
+            categoryProducts.products.push(product);
           });
         })
         .catch((error) => {
@@ -151,3 +210,7 @@ export default {
   },
 };
 </script>
+<style lang="sass" scoped>
+.my-card
+  width: 100%
+</style>
