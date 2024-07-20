@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lhh Lpr lFf">
+  <q-layout view="lhh Lpr lFf" class="bg-grey-2">
     <q-header
       style="border-radius:  0 0 0 20px;"
     >
@@ -74,10 +74,9 @@
 <!--    </q-drawer>-->
 
     <q-page-container>
-<!--       que este flotante al lado superioro izquiero-->
-      <div style="position: relative">
+      <div style="position: relative;">
         <div style="position: absolute;height: 40px;width: 100%" class="bg-primary">
-          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 40px; background-color: white; border-radius: 0 20px 0 0">
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 40px; border-radius: 0 20px 0 0" class="bg-grey-2">
           </div>
         </div>
       </div>
