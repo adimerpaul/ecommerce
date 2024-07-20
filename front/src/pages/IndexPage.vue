@@ -1,9 +1,9 @@
 <template>
-  <q-page class="">
+  <q-page class="q-pa-md">
     <div class="row">
       <div class="col-12 col-md-1"></div>
       <div class="col-12 col-md-10">
-        <div class="q-pa-sm">
+        <div class="">
           <q-carousel
             class="br-20"
             animated
@@ -39,56 +39,50 @@
               :label="category.nombre"
             />
           </div>
-          <div style="overflow-x: auto; white-space: nowrap; display: flex; justify-content: flex-start;">
-            <div v-for="(product, index) in products" :key="index" >
-              <q-card  class="q-ma-sm" style="width: 220px;" flat >
-                <q-img
-                  :src="`${$url}../images/${product.imagen1}`"
-                  :alt="product.nombre"
-                  style="height: 130px"
-                >
-                  <div class="absolute-top-letf q-ma-none bg-primary text-white text-bold" style="padding: 0px 5px;margin: 0;">
-                    Mas vendido
+        </div>
+      </div>
+      <div class="col-12 col-md-1"></div>
+      <div class="col-12">
+        <div style="overflow-x: auto; white-space: nowrap; display: flex; justify-content: flex-start;">
+          <div v-for="(product, index) in products" :key="index" >
+            <q-card  class="q-ma-sm" style="width: 220px;" flat >
+              <q-img
+                :src="`${$url}../images/${product.imagen1}`"
+                :alt="product.nombre"
+                style="height: 130px"
+              >
+                <div class="absolute-top-letf q-ma-none bg-primary text-white text-bold" style="padding: 0px 5px;margin: 0;">
+                  Mas vendido
+                </div>
+              </q-img>
+              <q-card-section class="q-pa-none">
+                <!--                  si se sale que colique 3 puntitps-->
+                <div class="text-grey-7 text-bold q-pa-xs text-center"
+                     style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{ product.titulo }}
+                </div>
+                <div class="text-grey-7 q-px-xs "
+                     style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{ product.descripcion }}
+                </div>
+                <div class="row items-center">
+                  <div class="text-blue-7 text-bold q-pa-xs text-center">
+                    $ {{ product.precio }}
                   </div>
-                </q-img>
-                <q-card-section class="q-pa-none">
-<!--                  si se sale que colique 3 puntitps-->
-                  <div class="text-grey-7 text-bold q-pa-xs text-center"
-                       style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                    {{ product.titulo }}
+                  <q-space/>
+                  <!--                    subrayar-->
+                  <div class="text-grey-7 text-bold q-pa-xs text-center line-through" v-if="product.precioAnterior">
+                    $ {{ product.precioAnterior }}
                   </div>
-                  <div class="text-grey-7 q-px-xs "
-                       style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                    {{ product.descripcion }}
-                  </div>
-                  <div class="row items-center">
-                    <div class="text-blue-7 text-bold q-pa-xs text-center">
-                      $ {{ product.precio }}
-                    </div>
-                    <q-space/>
-<!--                    subrayar-->
-                    <div class="text-grey-7 text-bold q-pa-xs text-center line-through" v-if="product.precioAnterior">
-                      $ {{ product.precioAnterior }}
-                    </div>
-                  </div>
-                </q-card-section>
-                <!--              <q-card-actions>-->
-                <!--                <q-btn-->
-                <!--                  flat-->
-                <!--                  color="primary"-->
-                <!--                  label="Ver"-->
-                <!--                  @click="() => $router.push({ name: 'ProductPage', params: { id: product.id } })"-->
-                <!--                />-->
-                <!--                <q-btn flat color="primary" label="Comprar" />-->
-                <!--              </q-card-actions>-->
-              </q-card>
-            </div>
+                </div>
+              </q-card-section>
+            </q-card>
           </div>
         </div>
       </div>
     </div>
 <!--    <pre>{{masVendidos}}</pre>-->
-    <pre>{{products}}</pre>
+    <pre>{{categoriesProducts}}</pre>
   </q-page>
 </template>
 
@@ -97,9 +91,11 @@ export default {
   data() {
     return {
       slide: 0,
+      slide2: 1,
       carousels: [],
       products: [],
       categories: [],
+      categoriesProducts: [],
     };
   },
   mounted() {
@@ -107,9 +103,6 @@ export default {
     this.productsGet();
   },
   methods: {
-    onScroll() {
-      console.log("scroll");
-    },
     productsGet() {
       this.categories.push({ id: 0, nombre: "Todos" });
       this.$axios
@@ -123,6 +116,16 @@ export default {
                 id: product.category_id,
                 nombre: product.category.name,
               });
+            }
+            if(!this.categoriesProducts.find((category) => category.id === product.category_id)){
+              this.categoriesProducts.push({
+                id: product.category_id,
+                nombre: product.category.name,
+                products: [product],
+              });
+            }else{
+              const index = this.categoriesProducts.findIndex((category) => category.id === product.category_id);
+              this.categoriesProducts[index].products.push(product);
             }
           });
         })
