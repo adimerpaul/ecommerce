@@ -10,6 +10,7 @@
             v-model="slide"
             arrows
             navigation
+            autoplay
             infinite
             :height="$q.screen.lt.sm ? '150px' : '450px'"
           >

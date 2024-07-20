@@ -7,3 +7,4 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //})->middleware('auth:sanctum');
 Route::get('/carousels', [\App\Http\Controllers\CarouselController::class,'index']);
+Route::get('/products', [\App\Http\Controllers\ProductController::class,'index']);
