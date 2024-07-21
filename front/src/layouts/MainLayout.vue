@@ -81,6 +81,17 @@
         </div>
       </div>
       <router-view />
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <div>
+          <q-btn fab icon="fa-brands fa-whatsapp" color="green" dense type="a" href="https://wa.me/59169603027?text=Hola%20quiero%20comprar%20un%20producto" target="__blank"/>
+        </div>
+        <div class="q-mt-md">
+          <q-btn fab icon="fa-brands fa-shopify" color="primary" dense>
+            <q-tooltip>Carrito</q-tooltip>
+            <q-badge color="red" floating>3</q-badge>
+          </q-btn>
+        </div>
+      </q-page-sticky>
     </q-page-container>
     <q-footer style="border-radius: 20px 20px 0 0">
       <div class="row q-pa-md">
