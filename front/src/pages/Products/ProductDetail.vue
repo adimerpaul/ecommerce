@@ -4,7 +4,7 @@
     <div class="col-12 col-md-1"></div>
     <div class="col-12 col-md-10">
       <div class="row">
-        <div class="col-12 row items-center q-pt-md q-px-md">
+        <div class="col-12 row items-center q-pt-md q-px-md" v-if="!hidenHeader">
           <q-btn
             round
             size="12px"
@@ -52,6 +52,46 @@
                 <q-carousel-slide :img-src="`${$url}../images/${product.imagen2}`" :name="1" v-if="product.imagen2"/>
                 <q-carousel-slide :img-src="`${$url}../images/${product.imagen3}`" :name="2" v-if="product.imagen3"/>
                 <q-carousel-slide :img-src="`${$url}../images/${product.imagen4}`" :name="3" v-if="product.imagen4"/>
+                <template v-slot:control v-if="hidenHeader">
+                  <q-carousel-control
+                    position="top"
+                    :offset="[18, 0]"
+                    class="text-white rounded-borders"
+                  >
+                    <div class="row">
+                      <div class="col-12 row items-center q-pt-md">
+                        <q-btn
+                          round
+                          size="12px"
+                          unelevated
+                          color="grey-3"
+                          text-color="black"
+                          icon="fa-solid fa-arrow-left"
+                          aria-label="Back"
+                          @click="$router.go(-1)"/>
+                        <q-space/>
+                        <q-btn-group flat>
+                          <q-btn
+                            round
+                            :text-color="favorite ? 'red' : 'black'"
+                            size="12px"
+                            icon="fa-solid fa-heart"
+                            aria-label="Like"
+                            @click="favoritosClick"
+                          />
+                          <q-btn
+                            round
+                            text-color="black"
+                            size="12px"
+                            @click="share"
+                            icon="fa-solid fa-share-nodes"
+                            aria-label="Share"
+                          />
+                        </q-btn-group>
+                      </div>
+                    </div>
+                  </q-carousel-control>
+                </template>
               </q-carousel>
             </div>
             <div class="col-12 col-md-6 q-pa-md">
@@ -69,7 +109,7 @@
               </div>
               <div class="text-bold text-h6 q-px-md">
                 <span class="text-blue-8 text-bold text-h5">${{product.precio}}</span>
-                <span class="text-grey-8 text-bold text-h5 line-through q-ml-md">  ${{product.precioAnterior}}</span>
+                <span class="text-grey-8 text-bold text-h5 line-through q-ml-md" v-if="product.precioAnterior">  ${{product.precioAnterior}}</span>
               </div>
               <div class="q-px-md">
                 <q-scroll-area style="height: 180px;">
@@ -182,6 +222,11 @@ export default {
         this.product = res.data;
         this.radio = this.product.item1;
       })
+    }
+  },
+  computed: {
+    hidenHeader() {
+      return this.$q.screen.lt.sm;
     }
   }
 }
