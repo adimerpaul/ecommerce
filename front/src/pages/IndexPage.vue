@@ -286,7 +286,3 @@ export default {
   },
 };
 </script>
-<style lang="sass" scoped>
-.my-card
-  width: 100%
-</style>
