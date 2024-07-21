@@ -212,15 +212,12 @@ export default {
         this.$alert.success('Producto eliminado de favoritos');
         this.favorite = false;
         favorites.splice(favorites.indexOf(this.product_id), 1);
-        const index = favorites.indexOf(this.product_id);
-        if (index > -1) {
-          favorites.splice(index, 1);
-        }
+        this.$store.favorites.splice(this.$store.favorites.indexOf(this.product_id), 1);
       } else {
         this.$alert.success('Producto agregado a favoritos');
         this.favorite = true;
         favorites.push(this.product_id);
-        this.favorite = true;
+        this.$store.favorites.push(this.product_id);
       }
       localStorage.setItem('favorites', JSON.stringify(favorites));
     },

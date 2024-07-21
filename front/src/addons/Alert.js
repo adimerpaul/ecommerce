@@ -10,8 +10,8 @@ export class Alert {
       message,
       icon: 'check_circle',
       iconColor: 'positive',
-      timeout: 1500,
-      actions: [{ icon: 'close', color: 'white', size: 'sm' }]
+      timeout: 1000,
+      actions: [{ icon: 'close', color: 'grey', size: 'sm', round: true, dense: true }]
     })
   }
 

@@ -187,25 +187,26 @@
         </q-card-section>
         <q-card-section>
           <q-list>
-            <q-item>
-              <q-item-section>
-                <q-item-label>
-                  Producto 1
-                </q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-btn flat icon="fa-solid fa-trash" aria-label="Delete" />
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label>Producto 2</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-btn flat icon="fa-solid fa-trash" aria-label="Delete" />
-              </q-item-section>
-            </q-item>
+<!--            <q-item>-->
+<!--              <q-item-section>-->
+<!--                <q-item-label>-->
+<!--                  Producto 1-->
+<!--                </q-item-label>-->
+<!--              </q-item-section>-->
+<!--              <q-item-section side>-->
+<!--                <q-btn flat icon="fa-solid fa-trash" aria-label="Delete" />-->
+<!--              </q-item-section>-->
+<!--            </q-item>-->
+<!--            <q-item>-->
+<!--              <q-item-section>-->
+<!--                <q-item-label>Producto 2</q-item-label>-->
+<!--              </q-item-section>-->
+<!--              <q-item-section side>-->
+<!--                <q-btn flat icon="fa-solid fa-trash" aria-label="Delete" />-->
+<!--              </q-item-section>-->
+<!--            </q-item>-->
           </q-list>
+          <pre>{{$store.favorites}}</pre>
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Cerrar" v-close-popup />
