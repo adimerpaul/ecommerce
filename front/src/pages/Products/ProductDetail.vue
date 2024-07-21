@@ -28,8 +28,9 @@
               round
               text-color="black"
               size="12px"
-              icon="fa-solid fa-search"
-              aria-label="Search"
+              @click="share"
+              icon="fa-solid fa-share-nodes"
+              aria-label="Share"
             />
           </q-btn-group>
         </div>
@@ -154,6 +155,16 @@ export default {
       if (this.cantidad > 1) {
         this.cantidad--;
       }
+    },
+    share() {
+      const shareData = {
+        title: this.product.titulo,
+        text: this.product.descripcion,
+        url: window.location.href,
+      }
+      navigator.share(shareData)
+        .then(() => console.log('Successful share'))
+        .catch((error) => console.log('Error sharing', error));
     },
     favoritosClick() {
       const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
