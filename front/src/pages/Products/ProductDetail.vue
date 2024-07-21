@@ -92,6 +92,29 @@
                 <span class=" text-h6 q-px-md ">{{cantidad}}</span>
                 <q-btn square dense color="primary" icon="fa-solid fa-plus" @click="more" size="10px"/>
               </div>
+              <div>
+                <q-btn
+                  rounded
+                  color="primary"
+                  text-color="white"
+                  label="Agregar"
+                  class="q-my-md"
+                  icon="fa-solid fa-cart-plus"
+                  no-caps
+                />
+<!--                button whatas con mesaje quiero ests producto cantidad y precio-->
+                <q-btn
+                  rounded
+                  type="a"
+                  target="_blank"
+                  :href="`https://wa.me/5916960327?text=Quiero%20${product.titulo}%20${cantidad}%20${cantidad==1?'unidad':'unidades'}%20por%20${product.precio}`"
+                  color="green-8"
+                  text-color="white"
+                  label="Whatsapp"
+                  class="q-my-md q-ml-md"
+                  icon="fa-brands fa-whatsapp"
+                  no-caps></q-btn>
+              </div>
             </div>
           </div>
         </div>
@@ -99,7 +122,7 @@
     </div>
     <div class="col-12 col-md-1"></div>
   </div>
-  <pre>{{product}}</pre>
+<!--  <pre>{{product}}</pre>-->
 </q-page>
 </template>
 <script>
