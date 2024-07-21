@@ -12,7 +12,7 @@
             navigation
             autoplay
             infinite
-            :height="$q.screen.lt.sm ? '150px' : '450px'"
+            :height="$q.screen.lt.sm ? '150px' : '500px'"
           >
 <!--            <q-carousel-slide :name="1" img-src="https://cdn.quasar.dev/img/mountains.jpg" />-->
 <!--            <q-carousel-slide :name="2" img-src="https://cdn.quasar.dev/img/parallax1.jpg" />-->
@@ -35,9 +35,12 @@
               :class="`text-subtitle1 ${$q.screen.lt.sm ? 'q-ma-xs' : 'q-ma-md'}`"
               unelevated
               no-caps
-              color="grey-3"
+              size="12px"
+              color="grey-4"
+              :icon="category.icon"
               :label="category.nombre"
             />
+<!--            <pre>{{categories}}</pre>-->
           </div>
         </div>
       </div>
@@ -170,6 +173,7 @@ export default {
               this.categories.push({
                 id: product.category_id,
                 nombre: product.category.name,
+                icon: product.category.icon,
               });
             }
 

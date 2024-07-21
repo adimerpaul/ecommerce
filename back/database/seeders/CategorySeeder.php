@@ -334,9 +334,9 @@ class CategorySeeder extends Seeder
 //}
 //]
 //}
-            Category::create(['name'=>'Zapatillas']);
-            Category::create(['name'=>'Remeras']);
-            Category::create(['name'=>'Pantalones']);
+            Category::create(['name'=>'Zapatillas','icon'=>'fa-solid fa-shoe-prints']);
+            Category::create(['name'=>'Remeras', 'icon' => 'fa-solid fa-shirt']);
+            Category::create(['name'=>'Pantalones','icon' => 'fa-solid fa-bag-shopping']);
             SubCategory::create(['name'=>'Deportivas']);
             SubCategory::create(['name'=>'Entrenamientos']);
             SubCategory::create(['name'=>'Trail running']);

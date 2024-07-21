@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lhh Lpr lFf" class="bg-grey-2">
+  <q-layout view="lhh Lpr lff" class="bg-grey-2">
     <q-header
       style="border-radius:  0 0 0 20px;"
     >
@@ -82,65 +82,116 @@
       </div>
       <router-view />
     </q-page-container>
+    <q-footer style="border-radius: 20px 20px 0 0">
+      <div class="row q-pa-md">
+        <div class="col-12 col-md-1"></div>
+        <div class="col-12 col-md-10">
+          <div class="row">
+            <div class="col-12 col-md-3" >
+              <div class="text-center">
+                <q-avatar size="50px" class="q-ma-xs">
+                  <q-img src="logo.png"/>
+                </q-avatar>
+                <div class="text-h6 text-bold">
+                  Ecommerce
+                </div>
+                <div>
+                  <q-btn-group flat>
+                    <q-btn flat size="10px" round icon="fa-brands fa-instagram" aria-label="Instagram" />
+                    <q-btn flat size="10px" round icon="fa-brands fa-whatsapp" aria-label="Whatsapp" />
+                    <q-btn flat size="10px" round icon="fa-brands fa-facebook" aria-label="Facebook" />
+                    <q-btn flat size="10px" round icon="fa-solid fa-user" aria-label="User" />
+                  </q-btn-group>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-3 q-px-md" >
+                <div class="text-h6 text-bold">
+                  Contacto
+                </div>
+                <div class="">
+                  <div>
+                    <q-btn flat dense size="10px"  icon="fa-solid fa-envelope" aria-label="Email" label="adimer101@gmail.com" no-caps />
+                  </div>
+                  <div>
+                    <q-btn flat dense size="10px"  icon="fa-solid fa-phone" aria-label="Phone" label="+591 69603027" no-caps />
+                  </div>
+                  <div>
+                    <q-btn flat dense size="10px"  icon="fa-solid fa-map-marker-alt" aria-label="Map" label="Avenida DN y tartawoski #1996" no-caps />
+                  </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-3 q-px-md" >
+              <div class="text-h6 text-bold">
+                Productos
+              </div>
+              <div class="">
+                <div>
+                  <q-btn flat dense size="10px"  icon="fa-solid fa-box" aria-label="Products" label="Productos" no-caps />
+                </div>
+                <div>
+                  <q-btn flat dense size="10px"  icon="fa-solid fa-shopping-cart" aria-label="Cart" label="Carrito" no-caps />
+                </div>
+                <div>
+                  <q-btn flat dense size="10px"  icon="fa-solid fa-heart" aria-label="Favorites" label="Favoritos" no-caps />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-3 q-px-md" >
+              <div class="text-h6 text-bold">
+                Categorias
+              </div>
+              <div class="">
+                <div v-for="(category, index) in categories" :key="index">
+                  <q-btn flat dense size="10px"  :icon="category.icon" aria-label="Products" :label="category.name" no-caps />
+<!--                  <pre>{{category}}</pre>-->
+                </div>
+              </div>
+            </div>
+            <div class="col-12 text-center flex flex-center">
+              Desarrollado por
+              <q-btn flat dense  icon="fa-brands fa-github" aria-label="Github" label="Adimerpaul" no-caps type="a"
+                      href="https://github.com/adimerpaul" target="__blank"/>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-1"></div>
+      </div>
+    </q-footer>
   </q-layout>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-
-defineOptions({
-  name: 'MainLayout'
-})
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
+<script>
+export default {
+  data() {
+    return {
+      leftDrawerOpen: false,
+      linksList: [
+        {title: 'Home', icon: 'home', to: '/'},
+        {title: 'About', icon: 'info', to: '/about'},
+        {title: 'Contact', icon: 'mail', to: '/contact'}
+      ],
+      categories: []
+    }
   },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
+  mounted() {
+    this.categoriesGet();
   },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
+  methods: {
+    async categoriesGet() {
+      try {
+        const response = await this.$axios.get('categories');
+        this.categories = response.data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    toggleLeftDrawer() {
+      this.leftDrawerOpen = !this.leftDrawerOpen
+    }
   },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
 }
 </script>
