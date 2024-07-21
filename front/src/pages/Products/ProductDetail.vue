@@ -18,7 +18,7 @@
           <q-btn-group flat>
             <q-btn
               round
-              text-color="black"
+              :text-color="favorite ? 'red' : 'black'"
               size="12px"
               icon="fa-solid fa-heart"
               aria-label="Like"
@@ -135,9 +135,13 @@ export default {
       slide: 0,
       radio: '',
       cantidad: 1,
+      favorite: false
     }
   },
   mounted() {
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    this.favorite = favorites.includes(this.product_id);
+    // console.log(this.favorite);
     this.productGet();
   },
   methods: {
@@ -154,10 +158,10 @@ export default {
     favoritosClick() {
       const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
       if (favorites.includes(this.product_id)) {
-        console.log('existe');
+        this.favorite = false;
         favorites.splice(favorites.indexOf(this.product_id), 1);
       } else {
-        console.log('no existe');
+        this.favorite = true;
         favorites.push(this.product_id);
       }
       localStorage.setItem('favorites', JSON.stringify(favorites));
