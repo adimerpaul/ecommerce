@@ -22,7 +22,7 @@
       <div class="row">
         <div class="col-12 col-md-1"></div>
         <div class="col-12 col-md-10 row items-center">
-          <q-avatar size="50px" class="q-ma-xs">
+          <q-avatar size="50px" class="q-ma-xs cursor-pointer" @click="$router.push('/')">
             <q-img src="logo.png"/>
           </q-avatar>
           <q-space/>
