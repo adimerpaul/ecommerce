@@ -114,7 +114,9 @@
                 <div style="overflow-x: auto; white-space: nowrap; display: flex; justify-content: flex-start;">
                   <div style="overflow-x: auto; white-space: nowrap; display: flex; justify-content: flex-start;width: 100%;">
                     <div v-for="(product, index) in categoriesProduct.products" :key="index" >
-                      <q-card  class="q-ma-sm cursor-pointer" style="width: 280px;" flat bordered>
+                      <q-card  class="q-ma-sm cursor-pointer" style="width: 280px;" flat bordered
+                               @click="$router.push(`/producto/${product.id}/${espacioGuiones(product.titulo)}`)"
+                               >
                         <q-card-section horizontal>
                           <q-img
                             class="col-4"
@@ -162,7 +164,9 @@
               </div>
             </div>
             <div v-for="(product, index) in categoriesProduct.products" :key="index" class="col-12 col-md-3" >
-              <q-card  class="q-ma-sm cursor-pointer"  flat bordered>
+              <q-card  class="q-ma-sm cursor-pointer"  flat bordered
+                       @click="$router.push(`/producto/${product.id}/${espacioGuiones(product.titulo)}`)"
+              >
                 <q-card-section horizontal>
                   <q-img
                     class="col-4"
