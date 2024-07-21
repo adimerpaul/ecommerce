@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lhh Lpr lff" class="bg-grey-2">
-    <q-header
+    <q-header v-if="visibleHeader"
       style="border-radius:  0 0 0 20px;"
     >
 <!--      <q-toolbar>-->
@@ -23,7 +23,7 @@
         <div class="col-12 col-md-1"></div>
         <div class="col-12 col-md-10 row items-center">
           <q-avatar size="50px" class="q-ma-xs cursor-pointer" @click="$router.push('/')">
-            <q-img src="logo.png"/>
+            <q-img src="/logo.png"/>
           </q-avatar>
           <q-space/>
 <!--          3 botone s megusta nuscar menu-->
@@ -75,7 +75,7 @@
 <!--    </q-drawer>-->
 
     <q-page-container>
-      <div style="position: relative;">
+      <div style="position: relative;" v-if="visibleHeader">
         <div style="position: absolute;height: 40px;width: 100%" class="bg-primary">
           <div style="position: absolute; top: 0; left: 0; width: 100%; height: 40px; border-radius: 0 20px 0 0" class="bg-grey-2">
           </div>
@@ -102,7 +102,7 @@
             <div class="col-12 col-md-3" >
               <div class="text-center">
                 <q-avatar size="50px" class="q-ma-xs">
-                  <q-img src="logo.png"/>
+                  <q-img src="/logo.png"/>
                 </q-avatar>
                 <div class="text-h6 text-bold">
                   Ecommerce
@@ -246,5 +246,16 @@ export default {
       this.leftDrawerOpen = !this.leftDrawerOpen
     }
   },
+  computed: {
+    visibleHeader() {
+      // viible solo para index
+      if (this.$route.path === '/') {
+        return true;
+      }else if (!this.$q.screen.lt.md) {
+        return true;
+      }
+      return false;
+    }
+  }
 }
 </script>
