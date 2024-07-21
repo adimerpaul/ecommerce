@@ -14,10 +14,6 @@
             infinite
             :height="$q.screen.lt.sm ? '150px' : '500px'"
           >
-<!--            <q-carousel-slide :name="1" img-src="https://cdn.quasar.dev/img/mountains.jpg" />-->
-<!--            <q-carousel-slide :name="2" img-src="https://cdn.quasar.dev/img/parallax1.jpg" />-->
-<!--            <q-carousel-slide :name="3" img-src="https://cdn.quasar.dev/img/parallax2.jpg" />-->
-<!--            <q-carousel-slide :name="4" img-src="https://cdn.quasar.dev/img/quasar.jpg" />-->
             <q-carousel-slide
               v-for="(carousel, index) in carousels"
               :key="index"
@@ -27,6 +23,7 @@
             </q-carousel-slide>
           </q-carousel>
           <div style="overflow-x: auto; white-space: nowrap;">
+            <q-scroll-observer @scroll="onScroll" />
             <q-btn
               text-color="black"
               rounded
@@ -40,15 +37,16 @@
               :icon="category.icon"
               :label="category.nombre"
             />
-<!--            <pre>{{categories}}</pre>-->
           </div>
+<!--          <pre>{{scrollInfo}}</pre>-->
+<!--          <pre>{{visibleHeader}}</pre>-->
         </div>
       </div>
       <div class="col-12 col-md-1"></div>
       <div class="col-12">
         <div style="overflow-x: auto; white-space: nowrap; display: flex; justify-content: flex-start;">
-          <div v-for="(product, index) in products" :key="index" >
-            <q-card  class="q-ma-sm" style="width: 220px;" flat >
+          <div v-for="(product, index) in masVendidos" :key="index" >
+            <q-card  class="q-ma-sm cursor-pointer" style="width: 220px;" flat >
               <q-img
                 :src="`${$url}../images/${product.imagen1}`"
                 :alt="product.nombre"
@@ -83,6 +81,23 @@
         </div>
       </div>
       <div class="col-12">
+        <div style="overflow-x: auto; white-space: nowrap;position: fixed; top: 0;z-index: 1000;" class="bg-grey-2 q-pa-xs full-width" v-if="visibleHeader">
+          <q-btn
+            text-color="black"
+            rounded
+            v-for="(category, index) in categories"
+            :key="index"
+            :class="`text-subtitle1 ${$q.screen.lt.sm ? 'q-ma-xs' : 'q-ma-xs'}`"
+            unelevated
+            no-caps
+            size="12px"
+            color="grey-4"
+            :icon="category.icon"
+            :label="category.nombre"
+          />
+        </div>
+      </div>
+      <div class="col-12">
         <template v-for="(categoriesProduct, index) in categoriesProducts" :key="index">
           <div class="row">
             <div class="col-12">
@@ -94,7 +109,7 @@
               <div style="overflow-x: auto; white-space: nowrap; display: flex; justify-content: flex-start;">
                 <div style="overflow-x: auto; white-space: nowrap; display: flex; justify-content: flex-start;width: 100%;">
                   <div v-for="(product, index) in categoriesProduct.products" :key="index" >
-                    <q-card  class="q-ma-sm" style="width: 280px;" flat bordered>
+                    <q-card  class="q-ma-sm cursor-pointer" style="width: 280px;" flat bordered>
                       <q-card-section horizontal>
                         <q-img
                           class="col-4"
@@ -148,6 +163,7 @@ export default {
       products: [],
       categories: [],
       categoriesProducts: [],
+      scrollInfo: {},
     };
   },
   mounted() {
@@ -155,9 +171,12 @@ export default {
     this.productsGet();
   },
   methods: {
+    onScroll (info) {
+      this.scrollInfo = info
+    },
     productsGet() {
       // Inicializa las categorías con la opción "Todos"
-      this.categories = [{ id: 0, nombre: "Todos" }];
+      this.categories = [{ id: 0, nombre: "Todos" , icon: "fa-solid fa-box"}];
       this.categoriesProducts = [];
 
       // Realiza la solicitud para obtener los productos
@@ -210,6 +229,15 @@ export default {
   computed: {
     masVendidos() {
       return this.products.filter((product) => product.masVendido === "si");
+    },
+    visibleHeader() {
+      if (this.scrollInfo.position?.top>=615 && !this.$q.screen.lt.sm) {
+        return true;
+      }else if (this.scrollInfo.position?.top>=215 && this.$q.screen.lt.sm) {
+        return true;
+      }else{
+        return false;
+      }
     },
   },
 };
