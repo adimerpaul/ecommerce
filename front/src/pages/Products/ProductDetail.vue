@@ -152,7 +152,15 @@ export default {
       }
     },
     favoritosClick() {
-      console.log('favoritosClick');
+      const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      if (favorites.includes(this.product_id)) {
+        console.log('existe');
+        favorites.splice(favorites.indexOf(this.product_id), 1);
+      } else {
+        console.log('no existe');
+        favorites.push(this.product_id);
+      }
+      localStorage.setItem('favorites', JSON.stringify(favorites));
     },
     async productGet() {
       this.$axios.get(`producto/${this.product_id}`).then(res=>{
