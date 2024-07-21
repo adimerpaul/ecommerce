@@ -33,6 +33,7 @@
               round
               icon="fa-solid fa-heart"
               aria-label="Like"
+              @click="favoritosClick"
             />
             <q-btn
               flat
@@ -172,6 +173,43 @@
         <div class="col-12 col-md-1"></div>
       </div>
     </q-footer>
+    <q-dialog v-model="favoritosDialog"
+              :maximized="true"
+    >
+      <q-card style="width: 100%; max-width: 80vw;">
+        <q-card-section class="row items-center q-px-md bg-primary text-white q-px-none">
+<!--          //buton de volver atras-->
+          <q-btn flat round dense icon="fa-solid fa-arrow-left" v-close-popup />
+          <q-space/>
+          <div class="text-h6">Favoritos</div>
+        </q-card-section>
+        <q-card-section>
+          <q-list>
+            <q-item>
+              <q-item-section>
+                <q-item-label>
+                  Producto 1
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-btn flat icon="fa-solid fa-trash" aria-label="Delete" />
+              </q-item-section>
+            </q-item>
+            <q-item>
+              <q-item-section>
+                <q-item-label>Producto 2</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-btn flat icon="fa-solid fa-trash" aria-label="Delete" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cerrar" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-layout>
 </template>
 
@@ -185,13 +223,17 @@ export default {
         {title: 'About', icon: 'info', to: '/about'},
         {title: 'Contact', icon: 'mail', to: '/contact'}
       ],
-      categories: []
+      categories: [],
+      favoritosDialog: false
     }
   },
   mounted() {
     this.categoriesGet();
   },
   methods: {
+    favoritosClick() {
+      this.favoritosDialog = true;
+    },
     async categoriesGet() {
       try {
         const response = await this.$axios.get('categories');

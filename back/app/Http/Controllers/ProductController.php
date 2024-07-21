@@ -9,4 +9,7 @@ class ProductController extends Controller{
     function index(){
         return Product::with('category','subCategory')->get();
     }
+    function show($id){
+        return Product::with('category','subCategory')->find($id);
+    }
 }

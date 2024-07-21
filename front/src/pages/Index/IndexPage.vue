@@ -68,10 +68,10 @@
         <div class="col-12">
           <div style="overflow-x: auto; white-space: nowrap; display: flex; justify-content: flex-start;">
             <div v-for="(product, index) in masVendidos" :key="index" >
-              <q-card  class="q-ma-sm cursor-pointer" style="width: 220px;" flat >
+              <q-card  class="q-ma-sm cursor-pointer" style="width: 220px;" flat  @click="$router.push(`/producto/${product.id}/${espacioGuiones(product.titulo)}`)">
                 <q-img
                   :src="`${$url}../images/${product.imagen1}`"
-                  :alt="product.nombre"
+                  :alt="product.titulo"
                   style="height: 130px"
                 >
                   <div class="absolute-top-letf q-ma-none bg-primary text-white text-bold" style="padding: 0px 5px;margin: 0;font-size: 11px;">
@@ -222,6 +222,9 @@ export default {
     this.productsGet();
   },
   methods: {
+    espacioGuiones(texto) {
+      return texto.replace(/ /g, "-");
+    },
     onScroll (info) {
       this.scrollInfo = info
     },
