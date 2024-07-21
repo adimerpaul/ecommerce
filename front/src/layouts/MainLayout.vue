@@ -187,16 +187,16 @@
         </q-card-section>
         <q-card-section>
           <q-list>
-<!--            <q-item>-->
-<!--              <q-item-section>-->
-<!--                <q-item-label>-->
-<!--                  Producto 1-->
-<!--                </q-item-label>-->
-<!--              </q-item-section>-->
-<!--              <q-item-section side>-->
-<!--                <q-btn flat icon="fa-solid fa-trash" aria-label="Delete" />-->
-<!--              </q-item-section>-->
-<!--            </q-item>-->
+            <q-item v-for="(favorite, index) in $store.favorites" :key="index">
+              <q-item-section>
+                <q-item-label>
+                  {{favorite}}
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-btn flat icon="fa-solid fa-trash" size="10px" color="red" aria-label="Delete" />
+              </q-item-section>
+            </q-item>
 <!--            <q-item>-->
 <!--              <q-item-section>-->
 <!--                <q-item-label>Producto 2</q-item-label>-->
@@ -207,6 +207,7 @@
 <!--            </q-item>-->
           </q-list>
           <pre>{{$store.favorites}}</pre>
+          <pre>{{$store.products}}</pre>
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Cerrar" v-close-popup />
@@ -232,8 +233,20 @@ export default {
   },
   mounted() {
     this.categoriesGet();
+    if (this.$store.products.length === 0) {
+      this.productsGet();
+    }
   },
   methods: {
+    async productsGet() {
+      this.$axios.get('products')
+        .then(response => {
+          this.$store.products = response.data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
     favoritosClick() {
       this.favoritosDialog = true;
     },

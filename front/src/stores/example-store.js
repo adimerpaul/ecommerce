@@ -5,6 +5,7 @@ export const useCounterStore = defineStore('counter', {
     counter: 0,
     cart: [],
     favorites: [],
+    products: [],
   }),
   getters: {
     doubleCount: (state) => state.counter * 2,

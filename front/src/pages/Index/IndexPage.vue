@@ -236,35 +236,34 @@ export default {
       this.categories = [{ id: 0, nombre: "Todos" , icon: "fa-solid fa-box"}];
       this.categoriesProducts = [];
 
-      this.$axios
-        .get("products")
-        .then((response) => {
-          this.products = response.data;
+      this.$axios.get("products").then((response) => {
+        this.products = response.data;
+        this.$store.products = response.data;
 
-          response.data.forEach((product) => {
-            if (!this.categories.find((category) => category.id === product.category_id)) {
-              this.categories.push({
-                id: product.category_id,
-                nombre: product.category.name,
-                icon: product.category.icon,
-              });
-            }
+        response.data.forEach((product) => {
+          if (!this.categories.find((category) => category.id === product.category_id)) {
+            this.categories.push({
+              id: product.category_id,
+              nombre: product.category.name,
+              icon: product.category.icon,
+            });
+          }
 
-            let categoryProducts = this.categoriesProducts.find((category) => category.id === product.category_id);
-            if (!categoryProducts) {
-              categoryProducts = {
-                id: product.category_id,
-                nombre: product.category.name,
-                products: [],
-              };
-              this.categoriesProducts.push(categoryProducts);
-            }
-            categoryProducts.products.push(product);
-          });
-        })
-        .catch((error) => {
-          console.log(error);
+          let categoryProducts = this.categoriesProducts.find((category) => category.id === product.category_id);
+          if (!categoryProducts) {
+            categoryProducts = {
+              id: product.category_id,
+              nombre: product.category.name,
+              products: [],
+            };
+            this.categoriesProducts.push(categoryProducts);
+          }
+          categoryProducts.products.push(product);
         });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     },
     carouselsGet() {
       this.$axios
