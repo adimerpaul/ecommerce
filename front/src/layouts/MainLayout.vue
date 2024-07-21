@@ -174,11 +174,13 @@
       </div>
     </q-footer>
     <q-dialog v-model="favoritosDialog"
+              :position="esMovil ? undefined : 'right'"
               :maximized="true"
+              transition-show="slide-left"
+              transition-hide="slide-right"
     >
-      <q-card style="width: 100%; max-width: 80vw;">
+      <q-card style="width: 550px; max-width: 100vw;">
         <q-card-section class="row items-center q-px-md bg-primary text-white q-px-none">
-<!--          //buton de volver atras-->
           <q-btn flat round dense icon="fa-solid fa-arrow-left" v-close-popup />
           <q-space/>
           <div class="text-h6">Favoritos</div>
@@ -248,13 +250,15 @@ export default {
   },
   computed: {
     visibleHeader() {
-      // viible solo para index
       if (this.$route.path === '/') {
         return true;
       }else if (!this.$q.screen.lt.md) {
         return true;
       }
       return false;
+    },
+    esMovil() {
+      return this.$q.screen.lt.md;
     }
   }
 }
