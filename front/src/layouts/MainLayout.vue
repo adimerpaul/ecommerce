@@ -187,14 +187,13 @@
         </q-card-section>
         <q-card-section>
           <q-list separator >
-            <q-item v-for="(favorite, index) in $store.favorites" :key="index" :to="'/producto/' + favorite+ '/'+ searchProducts(favorite)?.titulo">
-              <q-item-section avatar>
+            <q-item v-for="(favorite, index) in $store.favorites" class="cursor-pointer" :key="index">
+              <q-item-section avatar @click="redirectProduct(favorite)">
                 <q-avatar square size="60px">
                   <q-img :src="`${$url}../images/${searchProducts(favorite)?.imagen1}`"/>
                 </q-avatar>
               </q-item-section>
-              <q-item-section>
-<!--                si sale del texto colcoar 3 pusntos-->
+              <q-item-section @click="redirectProduct(favorite)">
                 <q-item-label class="text-bold text-grey-8" style="width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                   {{searchProducts(favorite)?.titulo}}
                 </q-item-label>
@@ -206,16 +205,16 @@
                 </q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-btn flat icon="fa-solid fa-heart" size="10px" color="red" aria-label="Delete" />
+                <q-btn flat icon="fa-solid fa-heart" size="10px" color="red" aria-label="Delete" @click="deleteFavorite(favorite,$event)" style="z-index: 100"/>
               </q-item-section>
             </q-item>
           </q-list>
 <!--          <pre>{{$store.favorites}}</pre>-->
 <!--          <pre>{{$store.products}}</pre>-->
         </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Cerrar" v-close-popup />
-        </q-card-actions>
+<!--        <q-card-actions align="right">-->
+<!--          <q-btn flat label="Cerrar" v-close-popup />-->
+<!--        </q-card-actions>-->
       </q-card>
     </q-dialog>
   </q-layout>
@@ -242,6 +241,23 @@ export default {
     }
   },
   methods: {
+    redirectProduct(product) {
+      console.log(product);
+    // :to="'/producto/' + favorite+ '/'+ searchProducts(favorite)?.titulo"
+      this.$router.push('/producto/' + product + '/'+ this.searchProducts(product)?.titulo);
+    },
+    deleteFavorite(id,event) {
+      event.stopPropagation();
+      const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      if (favorites.includes(id)) {
+        this.$alert.success('Producto eliminado de favoritos');
+        const index = favorites.indexOf(id);
+        console.log(index);
+        favorites.splice(favorites.indexOf(id.toString()), 1);
+        this.$store.favorites.splice(this.$store.favorites.indexOf(id.toString()), 1);
+      }
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+    },
     async productsGet() {
       this.$axios.get('products')
         .then(response => {
