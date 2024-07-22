@@ -179,35 +179,39 @@
               transition-show="slide-left"
               transition-hide="slide-right"
     >
-      <q-card style="width: 550px; max-width: 100vw;">
+      <q-card style="width: 450px; max-width: 100vw;">
         <q-card-section class="row items-center q-px-md bg-primary text-white q-px-none">
           <q-btn flat round dense icon="fa-solid fa-arrow-left" v-close-popup />
           <q-space/>
           <div class="text-h6">Favoritos</div>
         </q-card-section>
         <q-card-section>
-          <q-list>
-            <q-item v-for="(favorite, index) in $store.favorites" :key="index">
+          <q-list separator >
+            <q-item v-for="(favorite, index) in $store.favorites" :key="index" :to="'/producto/' + favorite+ '/'+ searchProducts(favorite)?.titulo">
+              <q-item-section avatar>
+                <q-avatar square size="60px">
+                  <q-img :src="`${$url}../images/${searchProducts(favorite)?.imagen1}`"/>
+                </q-avatar>
+              </q-item-section>
               <q-item-section>
-                <q-item-label>
-                  {{favorite}}
+<!--                si sale del texto colcoar 3 pusntos-->
+                <q-item-label class="text-bold text-grey-8" style="width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{searchProducts(favorite)?.titulo}}
+                </q-item-label>
+                <q-item-label class="text-caption">
+                  {{searchProducts(favorite)?.category?.name}}
+                </q-item-label>
+                <q-item-label class="text-caption text-bold">
+                  $ {{searchProducts(favorite)?.precio}}
                 </q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-btn flat icon="fa-solid fa-trash" size="10px" color="red" aria-label="Delete" />
+                <q-btn flat icon="fa-solid fa-heart" size="10px" color="red" aria-label="Delete" />
               </q-item-section>
             </q-item>
-<!--            <q-item>-->
-<!--              <q-item-section>-->
-<!--                <q-item-label>Producto 2</q-item-label>-->
-<!--              </q-item-section>-->
-<!--              <q-item-section side>-->
-<!--                <q-btn flat icon="fa-solid fa-trash" aria-label="Delete" />-->
-<!--              </q-item-section>-->
-<!--            </q-item>-->
           </q-list>
-          <pre>{{$store.favorites}}</pre>
-          <pre>{{$store.products}}</pre>
+<!--          <pre>{{$store.favorites}}</pre>-->
+<!--          <pre>{{$store.products}}</pre>-->
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Cerrar" v-close-popup />
@@ -260,6 +264,9 @@ export default {
     },
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen
+    },
+    searchProducts(id) {
+      return this.$store.products.find(product => product.id === parseInt(id));
     }
   },
   computed: {
