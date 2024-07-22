@@ -205,7 +205,7 @@
                 </q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-btn flat icon="fa-solid fa-heart" size="10px" color="red" aria-label="Delete" @click="deleteFavorite(favorite,$event)" style="z-index: 100"/>
+                <q-btn flat icon="fa-solid fa-trash" size="10px" color="red" aria-label="Delete" @click="deleteFavorite(favorite,$event)" style="z-index: 100"/>
               </q-item-section>
             </q-item>
           </q-list>
