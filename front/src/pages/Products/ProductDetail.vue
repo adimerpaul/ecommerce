@@ -179,6 +179,12 @@ export default {
       favorite: false
     }
   },
+  watch: {
+    '$route.params.id': function () {
+      this.product_id = this.$route.params.id;
+      this.productGet();
+    }
+  },
   mounted() {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     this.favorite = favorites.includes(this.product_id);
