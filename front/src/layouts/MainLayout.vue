@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lhh Lpr lff" class="bg-grey-2">
     <q-header v-if="visibleHeader"
-      style="border-radius:  0 0 0 20px;"
+      :style="`border-radius:  0 0 0 ${borderProductsSearch};`"
     >
 <!--      <q-toolbar>-->
 <!--        <q-btn-->
@@ -26,8 +26,31 @@
             <q-img src="/logo.png"/>
           </q-avatar>
           <q-space/>
-<!--          3 botone s megusta nuscar menu-->
           <q-btn-group flat >
+            <q-btn
+              flat
+              round
+              icon="fa-solid fa-home"
+              aria-label="Home"
+              @click="$router.push('/')">
+              <q-tooltip>Inicio</q-tooltip>
+            </q-btn>
+            <q-btn
+              flat
+              round
+              icon="fa-solid fa-user"
+              aria-label="User"
+              @click="$router.push('/login')">
+              <q-tooltip>Usuario</q-tooltip>
+            </q-btn>
+            <q-btn
+              flat
+              round
+              icon="fa-solid fa-box"
+              aria-label="Products"
+              @click="$router.push('/productsSearch')">
+              <q-tooltip>Productos</q-tooltip>
+            </q-btn>
             <q-btn
               flat
               round
@@ -50,7 +73,7 @@
             <q-btn
               flat
               round
-              icon="menu"
+              icon="fa-solid fa-bars"
               aria-label="Menu"
               @click="toggleLeftDrawer">
               <q-tooltip>Menu</q-tooltip>
@@ -362,6 +385,7 @@ export default {
     vaciarCarrito() {
       this.$store.cart = [];
       localStorage.setItem('cart', JSON.stringify([]));
+      // this.$alert.success('Carrito vaciado');
     },
     redirectProduct(product) {
       this.$router.push('/producto/' + product + '/'+ this.searchProducts(product)?.titulo);
@@ -409,6 +433,9 @@ export default {
     }
   },
   computed: {
+    borderProductsSearch() {
+      return this.$route.path === '/productsSearch' ? '0px' : '20px';
+    },
     visibleHeader() {
       if (this.$route.path === '/') {
         return true;
