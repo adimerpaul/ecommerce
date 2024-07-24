@@ -9,10 +9,16 @@ export const useCounterStore = defineStore('counter', {
   }),
   getters: {
     doubleCount: (state) => state.counter * 2,
+    cantidadProductos: (state) => {
+      let cantidad = 0;
+      state.cart.forEach((product) => {
+        cantidad += product.cantidad;
+      });
+      return cantidad;
+    }
   },
   actions: {
     addProduct(product) {
-       // preguntar si item existe si no exists eoclocar en un arary  y si existe aumentar al array
       const productIndex = this.cart.findIndex((item) => item.id === product.id);
       if (productIndex === -1) {
         product.items = [product.item];

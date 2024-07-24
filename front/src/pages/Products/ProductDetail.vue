@@ -68,7 +68,7 @@
                           text-color="black"
                           icon="fa-solid fa-arrow-left"
                           aria-label="Back"
-                          @click="$router.go(-1)"/>
+                          @click="$router.push('/')"/>
                         <q-space/>
                         <q-btn-group flat>
                           <q-btn

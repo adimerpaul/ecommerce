@@ -34,20 +34,27 @@
               icon="fa-solid fa-heart"
               aria-label="Like"
               @click="favoritosClick"
-            />
+              >
+              <q-badge color="red" floating v-if="$store.favorites.length > 0">
+                {{$store.favorites.length}}
+              </q-badge>
+              <q-tooltip>Ver favoritos</q-tooltip>
+            </q-btn>
             <q-btn
               flat
               round
               icon="fa-solid fa-search"
-              aria-label="Search"
-            />
+              aria-label="Search">
+              <q-tooltip>Buscar</q-tooltip>
+            </q-btn>
             <q-btn
               flat
               round
               icon="menu"
               aria-label="Menu"
-              @click="toggleLeftDrawer"
-            />
+              @click="toggleLeftDrawer">
+              <q-tooltip>Menu</q-tooltip>
+            </q-btn>
           </q-btn-group>
         </div>
         <div class="col-12 col-md-1"></div>
@@ -84,12 +91,16 @@
       <router-view />
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
         <div>
-          <q-btn fab icon="fa-brands fa-whatsapp" color="green" dense type="a" href="https://wa.me/59169603027?text=Hola%20quiero%20comprar%20un%20producto" target="__blank"/>
+          <q-btn fab icon="fa-brands fa-whatsapp" color="green" dense type="a" href="https://wa.me/59169603027?text=Hola%20quiero%20comprar%20un%20producto" target="__blank">
+            <q-tooltip>Whatsapp</q-tooltip>
+          </q-btn>
         </div>
         <div class="q-mt-md">
-          <q-btn fab icon="fa-brands fa-shopify" color="primary" dense>
+          <q-btn fab icon="fa-brands fa-shopify" color="primary" dense @click="cartDialog = true">
             <q-tooltip>Carrito</q-tooltip>
-            <q-badge color="red" floating>3</q-badge>
+            <q-badge color="red" floating v-if="$store.cantidadProductos > 0">
+              {{$store.cantidadProductos}}
+            </q-badge>
           </q-btn>
         </div>
       </q-page-sticky>
@@ -217,6 +228,52 @@
 <!--        </q-card-actions>-->
       </q-card>
     </q-dialog>
+    <q-dialog v-model="cartDialog"
+              :position="esMovil ? undefined : 'right'"
+              :maximized="true"
+              transition-show="slide-left"
+              transition-hide="slide-right"
+    >
+      <q-card style="width: 450px; max-width: 100vw;">
+        <q-card-section class="row items-center q-px-md bg-primary text-white q-px-none">
+          <q-btn flat round dense icon="fa-solid fa-arrow-left" v-close-popup />
+          <q-space/>
+          <div class="text-h6 cursor-pointer" @click="vaciarCarrito">Variar carrito</div>
+        </q-card-section>
+        <q-card-section>
+          <q-list separator >
+            <q-item v-for="(ca, index) in $store.cart" class="cursor-pointer" :key="index">
+              <q-item-section avatar @click="redirectProductCart(ca)">
+                <q-avatar square size="60px">
+                  <q-img :src="`${$url}../images/${ca.imagen1}`"/>
+                </q-avatar>
+              </q-item-section>
+              <q-item-section @click="redirectProductCart(ca)">
+                <q-item-label class="text-bold text-grey-8" style="width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{ca.titulo}}
+                </q-item-label>
+                <q-item-label class="text-caption">
+                  <span v-for="(item, index) in ca.items" :key="index" class="q-pl-xs">
+                    {{item}}
+                  </span>
+                </q-item-label>
+                <q-item-label class="text-caption text-bold">
+                  $ {{ca.precio}}
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <div class="items-center">
+                  <q-btn square dense rounded color="primary" icon="fa-solid fa-minus" @click="minus(ca)" size="10px" class="q-mr-xs" v-if="ca.cantidad > 1"/>
+                  <q-btn flat dense rounded color="red" icon="fa-solid fa-trash" @click="deleteCart(ca,$event)" size="10px" class="q-mr-xs" v-else/>
+                  {{ca.cantidad}}
+                  <q-btn square dense rounded color="primary" icon="fa-solid fa-plus" @click="more(ca)" size="10px" class="q-ml-xs"/>
+                </div>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-layout>
 </template>
 
@@ -231,7 +288,8 @@ export default {
         {title: 'Contact', icon: 'mail', to: '/contact'}
       ],
       categories: [],
-      favoritosDialog: false
+      favoritosDialog: false,
+      cartDialog: false,
     }
   },
   mounted() {
@@ -241,10 +299,30 @@ export default {
     }
   },
   methods: {
+    deleteCart(product,event) {
+      event.stopPropagation();
+      this.$store.cart.splice(this.$store.cart.indexOf(product), 1);
+      localStorage.setItem('cart', JSON.stringify(this.$store.cart));
+    },
+    minus(product) {
+      if (product.cantidad > 1) {
+        product.cantidad--;
+        localStorage.setItem('cart', JSON.stringify(this.$store.cart));
+      }
+    },
+    more(product) {
+      product.cantidad++;
+      localStorage.setItem('cart', JSON.stringify(this.$store.cart));
+    },
+    vaciarCarrito() {
+      this.$store.cart = [];
+      localStorage.setItem('cart', JSON.stringify([]));
+    },
     redirectProduct(product) {
-      console.log(product);
-    // :to="'/producto/' + favorite+ '/'+ searchProducts(favorite)?.titulo"
       this.$router.push('/producto/' + product + '/'+ this.searchProducts(product)?.titulo);
+    },
+    redirectProductCart(product) {
+      this.$router.push('/producto/' + product.id + '/'+ product.titulo);
     },
     deleteFavorite(id,event) {
       event.stopPropagation();
