@@ -21,39 +21,55 @@
                 <div class="bg-indigo text-center q-ma-xs text-white">
                   El usuario es admin y la contraseña es admin
                 </div>
-                <q-form>
+                <q-form @submit="login">
+                  <q-input
+                    v-model="user.username"
+                    filled
+                    label="Usuario"
+                    lazy-rules
+                    :rules="[val => !!val || 'Campo requerido']"
+                  />
+                  <q-input
+                    v-model="user.password"
+                    filled
+                    label="Contraseña"
+                    lazy-rules
+                    :type="visible ? 'text' : 'password'"
+                    :rules="[val => !!val || 'Campo requerido']"
+                  >
+                    <template v-slot:append>
+                      <q-icon
+                        name="visibility"
+                        v-if="!visible"
+                        class="cursor-pointer"
+                        @click="visible = true"
+                      />
+                      <q-icon
+                        name="visibility_off"
+                        v-else
+                        class="cursor-pointer"
+                        @click="visible = false"
+                      />
+                    </template>
+                  </q-input>
+                  <q-btn
+                    rounded
+                    color="primary"
+                    label="Iniciar sesión"
+                    class="full-width"
+                    :loading="loading"
+                    type="submit"
+                    no-caps
+                  />
 
+                  <q-btn
+                    flat
+                    no-caps
+                    :loading="loading"
+                    label="¿Olvidaste tu contraseña?"
+                    class="full-width"
+                  />
                 </q-form>
-                <q-input
-                  v-model="user.username"
-                  filled
-                  label="Usuario"
-                  lazy-rules
-                  :rules="[val => !!val || 'Campo requerido']"
-                />
-                <q-input
-                  v-model="user.password"
-                  filled
-                  label="Contraseña"
-                  lazy-rules
-                  type="password"
-                  :rules="[val => !!val || 'Campo requerido']"
-                />
-                <q-btn
-                  rounded
-                  color="primary"
-                  label="Iniciar sesión"
-                  class="full-width"
-                  no-caps
-                />
-
-                <q-btn
-                  flat
-                  no-caps
-                  label="¿Olvidaste tu contraseña?"
-                  class="full-width"
-                />
-
               </q-card-section>
             </q-card>
           </div>
@@ -74,6 +90,15 @@ export default {
         password: 'admin',
       },
     }
-  }
+  },
+  methods: {
+    login () {
+      this.loading = true
+      setTimeout(() => {
+        // this.$router.push({ name: 'ProductsSearch' })
+        this.loading = false
+      }, 1000)
+    },
+  },
 }
 </script>
