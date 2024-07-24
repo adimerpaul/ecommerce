@@ -91,13 +91,26 @@ export default {
       },
     }
   },
+  mounted() {
+    if (localStorage.getItem('tokenEco')){
+      this.$router.push('/menu')
+    }
+  },
   methods: {
     login () {
       this.loading = true
-      setTimeout(() => {
-        // this.$router.push({ name: 'ProductsSearch' })
-        this.loading = false
-      }, 1000)
+      this.$axios
+        .post('/login', this.user)
+        .then(res => {
+          localStorage.setItem('tokenEco', res.data.token)
+          this.$store.user = res.data.user
+          this.$router.push('/menu')
+        })
+        .catch((e) => {
+          this.$alert.error(e.response.data.message)
+        }).finally(() => {
+          this.loading = false
+        })
     },
   },
 }

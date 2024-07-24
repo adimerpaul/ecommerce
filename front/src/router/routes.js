@@ -8,10 +8,16 @@ const routes = [
       { path: 'productsSearch', component: () => import('pages/Products/ProductsSearch.vue') },
     ]
   },
-  //login
   {
     path: '/login',
     component: () => import('layouts/LoginLayout.vue'),
+  },
+  {
+    path: '/menu',
+    component: () => import('layouts/MenuLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Menu/MenuPage.vue') },
+    ]
   },
 
   // Always leave this as last one,

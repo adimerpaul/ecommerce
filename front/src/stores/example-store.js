@@ -6,6 +6,8 @@ export const useCounterStore = defineStore('counter', {
     cart: [],
     favorites: [],
     products: [],
+    user: {},
+    isLogged: !!localStorage.getItem('tokenEco'),
   }),
   getters: {
     doubleCount: (state) => state.counter * 2,
