@@ -69,6 +69,15 @@
                     label="¿Olvidaste tu contraseña?"
                     class="full-width"
                   />
+                  <q-btn
+                    outline
+                    rounded
+                    no-caps
+                    :loading="loading"
+                    label="Pagina principal"
+                    class="full-width"
+                    @click="() => this.$router.push('/')"
+                  />
                 </q-form>
               </q-card-section>
             </q-card>
@@ -92,7 +101,7 @@ export default {
     }
   },
   mounted() {
-    if (localStorage.getItem('tokenEco')){
+    if (this.$store.isLogeed) {
       this.$router.push('/menu')
     }
   },
@@ -102,8 +111,10 @@ export default {
       this.$axios
         .post('/login', this.user)
         .then(res => {
-          localStorage.setItem('tokenEco', res.data.token)
           this.$store.user = res.data.user
+          this.$store.isLogged = true
+          localStorage.setItem('tokenEco', res.data.token)
+          this.$axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`
           this.$router.push('/menu')
         })
         .catch((e) => {

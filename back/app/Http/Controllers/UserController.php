@@ -19,4 +19,13 @@ class UserController extends Controller{
             'message' => 'Usuario o contraseña incorrectos'
         ], 401);
     }
+    function me(Request $request){
+        return $request->user();
+    }
+    function logout(Request $request){
+        $request->user()->tokens()->delete();
+        return response()->json([
+            'message' => 'Sesión cerrada'
+        ]);
+    }
 }

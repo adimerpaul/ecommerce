@@ -16,7 +16,7 @@ const routes = [
     path: '/menu',
     component: () => import('layouts/MenuLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Menu/MenuPage.vue') },
+      { path: '', component: () => import('pages/Menu/MenuPage.vue') , meta: { requiresAuth: true }},
     ]
   },
 

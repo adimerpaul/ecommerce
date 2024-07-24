@@ -141,7 +141,7 @@ export default {
         this.$axios.post('/logout').then(() => {
           this.$store.isLogeed = false;
           this.$store.user = {};
-          localStorage.removeItem('tokenPrestamos');
+          localStorage.removeItem('tokenEco');
           this.$router.push('/login');
         })
       })
