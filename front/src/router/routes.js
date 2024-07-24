@@ -17,6 +17,11 @@ const routes = [
     component: () => import('layouts/MenuLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Menu/MenuPage.vue') , meta: { requiresAuth: true }},
+      { path: '/products', component: () => import('pages/Menu/ProductsPage.vue') , meta: { requiresAuth: true }},
+      { path: '/category', component: () => import('pages/Menu/CategoryPage.vue') , meta: { requiresAuth: true }},
+      { path: '/sub_category', component: () => import('pages/Menu/SubCategoryPage.vue') , meta: { requiresAuth: true }},
+      { path: '/users', component: () => import('pages/Menu/UsersPage.vue') , meta: { requiresAuth: true }},
+      { path: '/carousel', component: () => import('pages/Menu/CarouselPage.vue') , meta: { requiresAuth: true }},
     ]
   },
 

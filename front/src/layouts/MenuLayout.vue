@@ -71,10 +71,8 @@
                   </q-avatar>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label class="text-white text-bold">
-                    <q-chip dense label="Vendedor" color="orange" text-color="white" v-if="$store.user?.role === 'VENDEDOR'" icon="account_circle"/>
-                    <q-chip dense label="Admin" color="indigo" text-color="white" v-if="$store.user?.role === 'ADMIN'" icon="account_circle"/>
-                    <q-chip dense label="Super admin" color="purple" text-color="white" v-if="$store.user?.role === 'SUPERADMIN'" icon="account_circle"/>
+                  <q-item-label class="text-white">
+                    <q-chip dense label="Admin" color="grey" text-color="white" icon="account_circle"/>
                   </q-item-label>
                   <q-item-label caption class="text-white">{{ $store.user.name }}</q-item-label>
                 </q-item-section>

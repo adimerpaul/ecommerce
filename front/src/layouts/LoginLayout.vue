@@ -101,7 +101,7 @@ export default {
     }
   },
   mounted() {
-    if (this.$store.isLogeed) {
+    if (localStorage.getItem('tokenEco')) {
       this.$router.push('/menu')
     }
   },
