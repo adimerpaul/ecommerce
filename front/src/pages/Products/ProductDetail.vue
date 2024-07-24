@@ -142,8 +142,8 @@
                   class="q-my-md"
                   icon="fa-solid fa-cart-plus"
                   no-caps
+                  @click="productMore"
                 />
-<!--                button whatas con mesaje quiero ests producto cantidad y precio-->
                 <q-btn
                   rounded
                   type="a"
@@ -192,7 +192,15 @@ export default {
     this.productGet();
   },
   methods: {
-    more() {
+    productMore() {
+      this.$store.addProduct({
+        ...this.product,
+        cantidad: this.cantidad,
+        item: this.radio
+      });
+      this.$alert.success('Producto agregado al carrito');
+    },
+    more()  {
       if (this.cantidad < this.product.stock) {
         this.cantidad++;
       }
