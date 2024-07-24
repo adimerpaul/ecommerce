@@ -241,7 +241,7 @@
           <div class="text-h6 cursor-pointer" @click="vaciarCarrito">Variar carrito</div>
         </q-card-section>
         <q-card-section>
-          <q-list separator >
+          <q-list separator v-if="$store.cart.length > 0">
             <q-item v-for="(ca, index) in $store.cart" class="cursor-pointer" :key="index">
               <q-item-section avatar @click="redirectProductCart(ca)">
                 <q-avatar square size="60px">
@@ -271,6 +271,43 @@
               </q-item-section>
             </q-item>
           </q-list>
+          <q-list v-else>
+            <q-item>
+              <q-item-section>
+                <div class="text-subtitle1 text-bold">
+                  No hay productos en el carrito
+                </div>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
+        <q-card-section class="q-pa-md bg-grey-2" v-if="$store.cart.length > 0">
+          <div class="row">
+            <div class="col-6">
+              <div class="text-h6 text-bold">
+                Total
+              </div>
+            </div>
+            <div class="col-6 text-right">
+              <div class="text-h6 text-bold">
+                $ {{$store.total}}
+              </div>
+            </div>
+            <div class="col-12">
+<!--              boton de mandar por whtasapp-->
+              <q-btn
+                class="full-width"
+                color="green"
+                label="Enviar por Whatsapp"
+                icon="fa-brands fa-whatsapp"
+                @click="cartDialog = false"
+                type="a"
+                no-caps
+                :href="`https://wa.me/59169603027?text=${formatCartWhatsapp()}`"
+                target="__blank"
+              />
+            </div>
+          </div>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -299,6 +336,14 @@ export default {
     }
   },
   methods: {
+    formatCartWhatsapp() {
+      let message = 'Hola, quiero comprar los siguientes productos: \n';
+      this.$store.cart.forEach(product => {
+        message += `${product.cantidad} ${product.titulo} $${product.precio} \n`;
+      });
+      message += `Total: $${this.$store.total}`;
+      return encodeURI(message);
+    },
     deleteCart(product,event) {
       event.stopPropagation();
       this.$store.cart.splice(this.$store.cart.indexOf(product), 1);

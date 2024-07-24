@@ -15,6 +15,13 @@ export const useCounterStore = defineStore('counter', {
         cantidad += product.cantidad;
       });
       return cantidad;
+    },
+    total: (state) => {
+      let total = 0;
+      state.cart.forEach((product) => {
+        total += product.cantidad * product.precio;
+      });
+      return total
     }
   },
   actions: {
