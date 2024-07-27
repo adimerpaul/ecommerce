@@ -39,7 +39,7 @@
             <q-td :props="props" auto-width style="margin: 0px;padding: 0px" >
 <!--              <q-chip :label="props.row.masVendido" color="primary" dense size="13px" />-->
               <q-toggle v-model="props.row.masVendido" dense false-value="no" true-value="si" :label="props.row.masVendido"
-                :color="props.row.masVendido === 'si' ? 'green' : 'grey'" @update:modelValue="updateProducto(props.row)" />
+                :color="props.row.masVendido === 'si' ? 'green' : 'grey'" @update:modelValue="updateProductoVendido(props.row)" />
             </q-td>
           </template>
           <template v-slot:top-right>
@@ -90,13 +90,14 @@
 <!--    },-->
 <!--    ]-->
     <q-dialog v-model="dialog" persistent>
-      <q-card style="width: 650px;max-width: 90vw">
-        <q-card-section class="row items-center q-pa-xs q-pb-none">
-          <div class="text-h6">Editar Producto</div>
+      <q-card style="width: 750px;max-width: 90vw">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-subtitle1 text-bold">Editar Producto</div>
           <q-space />
           <q-btn flat dense icon="close" @click="dialog = false" />
         </q-card-section>
-        <q-card-section class="q-pa-xs">
+        <q-card-section class="q-pt-none">
+          <q-form @submit="updateProducto(product)">
           <div class="row">
             <div class="col-6 col-md-3 text-center">
               <q-avatar bordered size="100px" square>
@@ -134,17 +135,78 @@
                 </q-badge>
               </q-avatar>
             </div>
-            <pre>{{product}}</pre>
+            <div class="col-12 col-md-12">
+              <label class="text-bold">Descripcion</label>
+              <q-input v-model="product.descripcion" dense outlined type="textarea" />
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="text-bold">Titulo</label>
+              <q-input v-model="product.titulo" dense outlined/>
+            </div>
+            <div class="col-6 col-md-2">
+              <label class="text-bold">Precio</label>
+              <q-input v-model="product.precio"  dense outlined type="number" />
+            </div>
+            <div class="col-6 col-md-2">
+              <label class="text-bold">Precio Anterior</label>
+              <q-input v-model="product.precioAnterior"  dense outlined type="number" />
+            </div>
+            <div class="col-12 col-md-2 text-center">
+              <label class="text-bold">Mas vendido</label> <br>
+              <q-toggle v-model="product.masVendido" dense false-value="no" true-value="si" :label="`${product.masVendido}`"
+                :color="product.masVendido === 'si' ? 'green' : 'grey'" />
+            </div>
+            <div class="col-4 col-md-2">
+              <label class="text-bold">Item 1</label>
+              <q-select v-model="product.item1" dense outlined :options="items" />
+            </div>
+            <div class="col-4 col-md-2">
+              <label class="text-bold">Item 2</label>
+              <q-select v-model="product.item2" dense outlined :options="items" />
+            </div>
+            <div class="col-4 col-md-2">
+              <label class="text-bold">Item 3</label>
+              <q-select v-model="product.item3" dense outlined :options="items" />
+            </div>
+            <div class="col-4 col-md-2">
+              <label class="text-bold">Item 4</label>
+              <q-select v-model="product.item4" dense outlined :options="items" />
+            </div>
+            <div class="col-4 col-md-2">
+              <label class="text-bold">Item 5</label>
+              <q-select v-model="product.item5" dense outlined :options="items" />
+            </div>
+            <div class="col-4 col-md-2">
+              <label class="text-bold">Item 6</label>
+              <q-select v-model="product.item6" dense outlined :options="items" />
+            </div>
+<!--            stock categorias y sbncatero con col*md 4-->
+            <div class="col-6 col-md-4">
+              <label class="text-bold">Stock</label>
+              <q-input v-model="product.stock" dense outlined type="number" />
+            </div>
+            <div class="col-6 col-md-4">
+              <label class="text-bold">Categoria</label>
+              <q-select v-model="product.category_id" dense outlined :options="categories"
+                        emit-value map-options option-value="id" option-label="name" />
+            </div>
+            <div class="col-6 col-md-4">
+              <label class="text-bold">Sub Categoria</label>
+              <q-select v-model="product.sub_category_id" dense outlined :options="subcategories"
+                        emit-value map-options option-value="id" option-label="name" />
+            </div>
+            <div class="col-12 text-right q-mt-xs">
+              <q-btn label="Cancelar" color="grey-3" unelevated text-color="black" no-caps v-close-popup />
+              <q-btn label="Guardar" color="positive" unelevated class="q-ml-xs" no-caps type="submit" />
+            </div>
+<!--            <pre>{{product}}</pre>-->
           </div>
+          </q-form>
         </q-card-section>
-        <q-card-actions align="right">
-          <q-btn label="Cancelar" color="primary" flat @click="dialog = false" />
-          <q-btn label="Guardar" color="primary" flat @click="updateProducto(product)" />
-        </q-card-actions>
       </q-card>
     </q-dialog>
     <div>
-      <pre>{{products}}</pre>
+<!--      <pre>{{products}}</pre>-->
     </div>
   </q-page>
 </template>
@@ -157,6 +219,8 @@ export default {
       products: [],
       product: {},
       categories: [],
+      subcategories: [],
+      items: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
       loading: false,
       dialog: false,
       imgChange: '',
@@ -165,17 +229,39 @@ export default {
         { name: 'titulo', label: 'Titulo', align: 'left', field: row => row.titulo },
         // { name: 'descripcion', label: 'Descripcion', align: 'left', field: row => row.descripcion },
         { name: 'precio', label: 'Precio', align: 'right', field: row => row.precio },
+        { name: 'precioAnterior', label: 'Precio Anterior', align: 'right', field: row => row.precioAnterior },
         { name: 'stock', label: 'Stock', align: 'right', field: row => row.stock },
         { name: 'masVendido', label: 'Mas Vendido', align: 'left', field: row => row.masVendido },
         { name: 'category', label: 'Categoria', align: 'left', field: row => row.category.name },
+        { name: 'items', label: 'Items', align: 'left', field: row => `${row.item1===null?'':row.item1} ${row.item2===null?'':row.item2} ${row.item3===null?'':row.item3} ${row.item4===null?'':row.item4} ${row.item5===null?'':row.item5} ${row.item6===null?'':row.item6}` },
         { name: 'sub_category', label: 'Sub Categoria', align: 'left', field: row => row.sub_category.name },
       ]
     }
   },
   mounted() {
     this.getProducts()
+    this.categorieGet()
+    this.subcategorieGet()
   },
   methods: {
+    updateProducto (producto) {
+      this.$axios.put(`products/${producto.id}`, producto)
+        .then(response => {
+          this.$alert.success('Producto actualizado')
+          this.dialog = false
+          const index = this.products.findIndex(p => p.id === producto.id)
+          this.products[index] = {...producto}
+        })
+        .catch(error => {
+          this.$alert.error(error.response.data.message)
+        })
+    },
+    categorieGet () {
+      this.$axios.get('categories').then((res) => { this.categories = res.data })
+    },
+    subcategorieGet () {
+      this.$axios.get('subCategories').then((res) => {this.subcategories = res.data})
+    },
     imgUrl (img) {
       if (!img) return null
       return img.includes('base64') ? img : `${this.$url}../images/${img}`
@@ -216,7 +302,7 @@ export default {
       this.dialog = true
       this.product = {...row}
     },
-    updateProducto (producto) {
+    updateProductoVendido (producto) {
       this.$axios.put(`products/${producto.id}`, { masVendido: producto.masVendido })
         .then(response => {
           this.$alert.success('Producto actualizado')
