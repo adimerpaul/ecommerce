@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Intervention\Image\Laravel\Facades\Image;
+
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 //Route::get('/user', function (Request $request) {
 //    return $request->user();
@@ -17,4 +21,19 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/logout', [\App\Http\Controllers\UserController::class,'logout']);
 
     Route::put('/products/{id}', [\App\Http\Controllers\ProductController::class,'update']);
+    Route::post('/uploadProduct/{id}', [\App\Http\Controllers\ProductController::class,'uploadProduct']);
+});
+Route::get('/test-image', function() {
+    $img = Image::make('images/1.png')->resize(300, 200);
+//    return $img->response('jpg');
+});
+Route::get('/', function () {
+    $manager = new ImageManager(new Driver());
+    $image = $manager->read('images/a.webp');
+
+    $image->scale(height: 600);
+// scale to 200 x 100 pixel
+//    $image->scale(200, 100); // 200 x 150
+    //guardar
+    $image->save('images/a1.webp');
 });

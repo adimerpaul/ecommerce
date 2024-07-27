@@ -2,7 +2,9 @@
   <q-page class="q-pa-xs bg-grey-3">
     <q-card>
       <q-card-section class="q-pa">
-        <q-table :rows="products" dense wrap-cells :columns="columns" :loading="loading" :rows-per-page-options="[0]" row-key="id">
+        <q-table :rows="products" dense wrap-cells :columns="columns" :loading="loading" :rows-per-page-options="[0]"
+                 @rowClick="editProductTable" :filter="filter" no-data-label="No hay productos">
+        >
           <template v-slot:body-cell-actions="props">
             <q-td :props="props" auto-width style="margin: 0px;padding: 0px" >
               <q-btn-dropdown dropdown-icon="more_vert" flat dense style="border: 0px;margin: 0px;padding: 0px" size="13px">
@@ -87,8 +89,62 @@
 <!--    }-->
 <!--    },-->
 <!--    ]-->
+    <q-dialog v-model="dialog" persistent>
+      <q-card style="width: 650px;max-width: 90vw">
+        <q-card-section class="row items-center q-pa-xs q-pb-none">
+          <div class="text-h6">Editar Producto</div>
+          <q-space />
+          <q-btn flat dense icon="close" @click="dialog = false" />
+        </q-card-section>
+        <q-card-section class="q-pa-xs">
+          <div class="row">
+            <div class="col-6 col-md-3 text-center">
+              <q-avatar bordered size="100px" square>
+                <q-img :src="imgUrl(product.imagen1)" />
+                <q-badge color="white" floating >
+                  <q-btn flat dense icon="camera_alt" color="grey" size="9px" @click="clickImagen('imagen1')" />
+                  <input type="file" class="hidden" id="file" @change="onFileChange" accept="image/*" />
+                </q-badge>
+              </q-avatar>
+            </div>
+            <div class="col-6 col-md-3 text-center">
+              <q-avatar bordered size="100px" square>
+                <q-img :src="imgUrl(product.imagen2)" />
+                <q-badge color="white" floating >
+                  <q-btn flat dense icon="camera_alt" color="grey" size="9px" @click="clickImagen('imagen2')" />
+                  <input type="file" class="hidden" id="file" @change="onFileChange" accept="image/*" />
+                </q-badge>
+              </q-avatar>
+            </div>
+            <div class="col-6 col-md-3 text-center">
+              <q-avatar bordered size="100px" square>
+                <q-img :src="imgUrl(product.imagen3)" />
+                <q-badge color="white" floating >
+                  <q-btn flat dense icon="camera_alt" color="grey" size="9px" @click="clickImagen('imagen3')" />
+                  <input type="file" class="hidden" id="file" @change="onFileChange" accept="image/*" />
+                </q-badge>
+              </q-avatar>
+            </div>
+            <div class="col-6 col-md-3 text-center">
+              <q-avatar bordered size="100px" square>
+                <q-img :src="imgUrl(product.imagen4)" />
+                <q-badge color="white" floating >
+                  <q-btn flat dense icon="camera_alt" color="grey" size="9px" @click="clickImagen('imagen4')" />
+                  <input type="file" class="hidden" id="file" @change="onFileChange" accept="image/*" />
+                </q-badge>
+              </q-avatar>
+            </div>
+            <pre>{{product}}</pre>
+          </div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn label="Cancelar" color="primary" flat @click="dialog = false" />
+          <q-btn label="Guardar" color="primary" flat @click="updateProducto(product)" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <div>
-<!--      <pre>{{products}}</pre>-->
+      <pre>{{products}}</pre>
     </div>
   </q-page>
 </template>
@@ -102,6 +158,8 @@ export default {
       product: {},
       categories: [],
       loading: false,
+      dialog: false,
+      imgChange: '',
       columns: [
         { name: 'actions', label: 'Acciones', align: 'center' },
         { name: 'titulo', label: 'Titulo', align: 'left', field: row => row.titulo },
@@ -118,6 +176,46 @@ export default {
     this.getProducts()
   },
   methods: {
+    imgUrl (img) {
+      if (!img) return null
+      return img.includes('base64') ? img : `${this.$url}../images/${img}`
+    },
+    clickImagen (img) {
+      this.imgChange = img
+      document.getElementById('file').click()
+    },
+    onFileChange (e) {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = e => {
+
+        this.product[this.imgChange] = e.target.result
+
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('field', this.imgChange)
+
+        this.$axios.post('uploadProduct/'+this.product.id, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+          .then(response => {
+            this.$alert.success('Imagen subida')
+            this.product = {...response.data}
+            const index = this.products.findIndex(p => p.id === this.product.id)
+            this.products[index] = {...this.product}
+          })
+          .catch(error => {
+            this.$alert.error(error.response.data.message)
+          })
+      }
+    },
+    editProductTable (event, row) {
+      this.dialog = true
+      this.product = {...row}
+    },
     updateProducto (producto) {
       this.$axios.put(`products/${producto.id}`, { masVendido: producto.masVendido })
         .then(response => {
