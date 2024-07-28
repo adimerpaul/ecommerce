@@ -1,4 +1,4 @@
-<template xmlns:q-table="http://www.w3.org/1999/html">
+<template>
   <q-page class="q-pa-xs bg-grey-3">
       <q-card class="q-pa-xs">
           <q-card-section>
