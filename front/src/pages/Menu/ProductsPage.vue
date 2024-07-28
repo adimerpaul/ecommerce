@@ -7,20 +7,24 @@
         >
           <template v-slot:body-cell-actions="props">
             <q-td :props="props" auto-width style="margin: 0px;padding: 0px" >
-              <q-btn-dropdown dropdown-icon="more_vert" flat dense style="border: 0px;margin: 0px;padding: 0px" size="13px">
-                <q-item clickable v-ripple v-close-popup>
+              <q-btn-dropdown dropdown-icon="more_vert" flat dense style="border: 0px;margin: 0px;padding: 0px" size="13px"
+                              @click="(event) => { event.stopPropagation() }">
+                <q-item clickable v-ripple v-close-popup @click="editProductTable($event, props.row)">
                   <q-item-section avatar>
                     <q-icon name="visibility" />
                   </q-item-section>
-                  <q-item-section>Ver</q-item-section>
+                  <q-item-section>
+                    Ver
+                    <pre>{{props.row}}</pre>
+                  </q-item-section>
                 </q-item>
-                <q-item clickable v-ripple v-close-popup>
+                <q-item clickable v-ripple v-close-popup @click="editProductTable($event, props.row)">
                   <q-item-section avatar>
                     <q-icon name="edit" />
                   </q-item-section>
                   <q-item-section>Editar</q-item-section>
                 </q-item>
-                <q-item clickable v-ripple v-close-popup>
+                <q-item clickable v-ripple v-close-popup @click="deleteProduct(props.row)">
                   <q-item-section avatar>
                     <q-icon name="delete" />
                   </q-item-section>
@@ -43,7 +47,7 @@
             </q-td>
           </template>
           <template v-slot:top-right>
-            <q-btn color="primary" label="Nuevo Producto" no-caps dense icon="add_circle_outline" @click="showNewProduct" />
+            <q-btn color="primary" label="Nuevo Producto" no-caps dense icon="add_circle_outline" @click="showNewProduct" :loading="loading" />
             <q-input v-model="filter" debounce="300" dense outlined placeholder="Buscar...">
               <template v-slot:prepend>
                 <q-icon name="search" />
@@ -53,42 +57,6 @@
         </q-table>
       </q-card-section>
     </q-card>
-<!--    [-->
-<!--    {-->
-<!--    "id": 1,-->
-<!--    "descripcion": "Sigue evolucionando en velocidad con un calzado de carrera hecho para ayudarte a alcanzar nuevos objetivos y récords. Mejora la comodidad y la transpirabilidad con una parte superior rediseñada. Ya sea en una carrera de 10 km o en un maratón, este modelo, al igual que su versión anterior",-->
-<!--    "titulo": "Nike Vaporfly NEXT",-->
-<!--    "precio": 13,-->
-<!--    "masVendido": "si",-->
-<!--    "imagen1": "CU4111_301_A_PREM.jpg",-->
-<!--    "imagen2": "CU4111_301_E_PREM.jpg",-->
-<!--    "imagen3": "CU4111_301_F_PREM.jpg",-->
-<!--    "imagen4": "457057-800-800.webp",-->
-<!--    "item1": "",-->
-<!--    "item2": "",-->
-<!--    "item3": "",-->
-<!--    "item4": "",-->
-<!--    "item5": "",-->
-<!--    "item6": "",-->
-<!--    "item7": "",-->
-<!--    "item8": "",-->
-<!--    "item9": "",-->
-<!--    "item10": "",-->
-<!--    "precioAnterior": 300000,-->
-<!--    "stock": 80,-->
-<!--    "category_id": 1,-->
-<!--    "sub_category_id": 1,-->
-<!--    "category": {-->
-<!--    "id": 1,-->
-<!--    "name": "Zapatillas",-->
-<!--    "icon": "fa-solid fa-shoe-prints"-->
-<!--    },-->
-<!--    "sub_category": {-->
-<!--    "id": 1,-->
-<!--    "name": "Deportivas"-->
-<!--    }-->
-<!--    },-->
-<!--    ]-->
     <q-dialog v-model="dialog" persistent>
       <q-card style="width: 750px;max-width: 90vw">
         <q-card-section class="row items-center q-pb-none">
@@ -323,10 +291,8 @@ export default {
             this.$alert.success('Imagen subida')
             console.log(response)
             if (response.data.esImagen){
-              console.log('es imagen')
-              this.product[this.imgChange] = response.data.name
+              this.product[response.data.field] = response.data.name
             }else{
-              console.log('no es imagen')
               this.product = {...response.data}
               const index = this.products.findIndex(p => p.id === this.product.id)
               this.products[index] = {...this.product}
@@ -336,6 +302,26 @@ export default {
             this.$alert.error(error.response.data.message)
           })
       }
+    },
+    deleteProduct (producto) {
+      this.$q.dialog({
+        title: 'Eliminar',
+        message: '¿Está seguro de eliminar este producto?',
+        ok: 'Si',
+        cancel: 'No'
+      }).onOk(() => {
+        this.loading = true
+        this.$axios.delete(`products/${producto.id}`)
+          .then(response => {
+            this.$alert.success('Producto eliminado')
+            this.products = this.products.filter(p => p.id !== producto.id)
+          })
+          .catch(error => {
+            this.$alert.error(error.response.data.message)
+          }).finally(() => {
+            this.loading = false
+          })
+      })
     },
     editProductTable (event, row) {
       this.dialog = true

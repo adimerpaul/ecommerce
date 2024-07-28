@@ -36,7 +36,8 @@ class ProductController extends Controller{
         }else{
             return [
                 'name' => $name,
-                'esImagen' => true
+                'esImagen' => true,
+                'field' => $field
             ];
         }
 
@@ -52,5 +53,9 @@ class ProductController extends Controller{
         $product = Product::find($id);
         $product->update($request->all());
         return $product;
+    }
+    function destroy($id){
+        Product::destroy($id);
+        return $id;
     }
 }

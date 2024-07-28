@@ -24,6 +24,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::put('/products/{id}', [\App\Http\Controllers\ProductController::class,'update']);
     Route::post('/products', [\App\Http\Controllers\ProductController::class,'store']);
     Route::post('/uploadProduct/{id}', [\App\Http\Controllers\ProductController::class,'uploadProduct']);
+    Route::delete('/products/{id}', [\App\Http\Controllers\ProductController::class,'destroy']);
 });
 Route::get('/test-image', function() {
     $img = Image::make('images/1.png')->resize(300, 200);
