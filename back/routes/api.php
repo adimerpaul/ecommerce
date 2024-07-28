@@ -33,6 +33,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/subCategories', [\App\Http\Controllers\SubCategoryController::class,'store']);
     Route::put('/subCategories/{id}', [\App\Http\Controllers\SubCategoryController::class,'update']);
     Route::delete('/subCategories/{id}', [\App\Http\Controllers\SubCategoryController::class,'destroy']);
+
+    Route::post('/carousels', [\App\Http\Controllers\CarouselController::class,'store']);
+    Route::post('/carousels/{id}', [\App\Http\Controllers\CarouselController::class,'update']);
+    Route::delete('/carousels/{id}', [\App\Http\Controllers\CarouselController::class,'destroy']);
+    Route::post('/uploadCarousel/{id}', [\App\Http\Controllers\CarouselController::class,'uploadCarousel']);
 });
 Route::get('/test-image', function() {
     $img = Image::make('images/1.png')->resize(300, 200);
