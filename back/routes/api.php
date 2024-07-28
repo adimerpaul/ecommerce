@@ -38,6 +38,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/carousels/{id}', [\App\Http\Controllers\CarouselController::class,'update']);
     Route::delete('/carousels/{id}', [\App\Http\Controllers\CarouselController::class,'destroy']);
     Route::post('/uploadCarousel/{id}', [\App\Http\Controllers\CarouselController::class,'uploadCarousel']);
+
+    Route::get('/users', [\App\Http\Controllers\UserController::class,'index']);
 });
 Route::get('/test-image', function() {
     $img = Image::make('images/1.png')->resize(300, 200);

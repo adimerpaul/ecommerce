@@ -28,4 +28,7 @@ class UserController extends Controller{
             'message' => 'Sesión cerrada'
         ]);
     }
+    function index(){
+        return User::all();
+    }
 }
