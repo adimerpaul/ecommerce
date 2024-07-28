@@ -92,12 +92,15 @@
     <q-dialog v-model="dialog" persistent>
       <q-card style="width: 750px;max-width: 90vw">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-subtitle1 text-bold">Editar Producto</div>
+          <div class="text-subtitle1 text-bold">
+            {{product.id ? 'Editar' : 'Nuevo'}}
+            Producto
+          </div>
           <q-space />
           <q-btn flat dense icon="close" @click="dialog = false" />
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-form @submit="updateProducto(product)">
+          <q-form @submit="formProduct(product)">
           <div class="row">
             <div class="col-6 col-md-3 text-center">
               <q-avatar bordered size="100px" square>
@@ -137,11 +140,11 @@
             </div>
             <div class="col-12 col-md-12">
               <label class="text-bold">Descripcion</label>
-              <q-input v-model="product.descripcion" dense outlined type="textarea" />
+              <q-input v-model="product.descripcion" dense outlined type="textarea" :rules="[val => !!val || 'Campo requerido']" />
             </div>
             <div class="col-12 col-md-6">
               <label class="text-bold">Titulo</label>
-              <q-input v-model="product.titulo" dense outlined/>
+              <q-input v-model="product.titulo" dense outlined :rules="[val => !!val || 'Campo requerido']" />
             </div>
             <div class="col-6 col-md-2">
               <label class="text-bold">Precio</label>
@@ -196,8 +199,8 @@
                         emit-value map-options option-value="id" option-label="name" />
             </div>
             <div class="col-12 text-right q-mt-xs">
-              <q-btn label="Cancelar" color="grey-3" unelevated text-color="black" no-caps v-close-popup />
-              <q-btn label="Guardar" color="positive" unelevated class="q-ml-xs" no-caps type="submit" />
+              <q-btn label="Cancelar" color="grey-3" unelevated text-color="black" no-caps v-close-popup :loading="loading" />
+              <q-btn label="Guardar" color="positive" unelevated class="q-ml-xs" no-caps type="submit" :loading="loading" />
             </div>
 <!--            <pre>{{product}}</pre>-->
           </div>
@@ -244,7 +247,34 @@ export default {
     this.subcategorieGet()
   },
   methods: {
-    updateProducto (producto) {
+    formProduct (producto) {
+      //deve selecionar al menos una foto
+      if (!producto.imagen1 && !producto.imagen2 && !producto.imagen3 && !producto.imagen4) {
+        this.$alert.error('Debe seleccionar al menos una imagen')
+        return
+      }
+      if (producto.id) {
+        this.updateProduct(producto)
+      } else {
+        this.createProduct(producto)
+      }
+    },
+    createProduct (producto) {
+      this.loading = true
+      this.$axios.post('products', producto)
+        .then(response => {
+          this.$alert.success('Producto creado')
+          this.dialog = false
+          this.products.push(response.data)
+        })
+        .catch(error => {
+          this.$alert.error(error.response.data.message)
+        }).finally(() => {
+        this.loading = false
+      })
+    },
+    updateProduct (producto) {
+      this.loading = true
       this.$axios.put(`products/${producto.id}`, producto)
         .then(response => {
           this.$alert.success('Producto actualizado')
@@ -254,7 +284,9 @@ export default {
         })
         .catch(error => {
           this.$alert.error(error.response.data.message)
-        })
+        }).finally(() => {
+        this.loading = false
+      })
     },
     categorieGet () {
       this.$axios.get('categories').then((res) => { this.categories = res.data })
@@ -289,9 +321,16 @@ export default {
         })
           .then(response => {
             this.$alert.success('Imagen subida')
-            this.product = {...response.data}
-            const index = this.products.findIndex(p => p.id === this.product.id)
-            this.products[index] = {...this.product}
+            console.log(response)
+            if (response.data.esImagen){
+              console.log('es imagen')
+              this.product[this.imgChange] = response.data.name
+            }else{
+              console.log('no es imagen')
+              this.product = {...response.data}
+              const index = this.products.findIndex(p => p.id === this.product.id)
+              this.products[index] = {...this.product}
+            }
           })
           .catch(error => {
             this.$alert.error(error.response.data.message)
@@ -312,7 +351,32 @@ export default {
         })
     },
     showNewProduct () {
-      // this.$router.push({ name: 'new-product' })
+      this.dialog = true
+      this.product = {
+        id: null,
+        descripcion: '',
+        titulo: '',
+        precio: 0,
+        masVendido: 'no',
+        imagen1: '',
+        imagen2: '',
+        imagen3: '',
+        imagen4: '',
+        item1: '',
+        item2: '',
+        item3: '',
+        item4: '',
+        item5: '',
+        item6: '',
+        item7: '',
+        item8: '',
+        item9: '',
+        item10: '',
+        precioAnterior: 0,
+        stock: 0,
+        category_id: 1,
+        sub_category_id: 1
+      }
     },
     getProducts () {
       this.loading = true

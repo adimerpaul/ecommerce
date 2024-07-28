@@ -22,6 +22,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/logout', [\App\Http\Controllers\UserController::class,'logout']);
 
     Route::put('/products/{id}', [\App\Http\Controllers\ProductController::class,'update']);
+    Route::post('/products', [\App\Http\Controllers\ProductController::class,'store']);
     Route::post('/uploadProduct/{id}', [\App\Http\Controllers\ProductController::class,'uploadProduct']);
 });
 Route::get('/test-image', function() {

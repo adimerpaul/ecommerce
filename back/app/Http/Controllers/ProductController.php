@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
 class ProductController extends Controller{
+    function store(Request $request){
+        $product = Product::create($request->all());
+        return Product::with(['category','subCategory'])->find($product->id);
+    }
     function uploadProduct(Request $request, $id){
         $validated = $request->validate([
             'file' => 'required|image',
@@ -23,11 +27,20 @@ class ProductController extends Controller{
         $image->scale(height: 600);
         $image->save('images/'.$name);
 
-        $product = Product::find($id);
-        $product->$field = $name;
-        $product->save();
+        if ($id!='null'){
+            $product = Product::find($id);
+            $product->$field = $name;
+            $product->save();
 
-        return Product::with('category','subCategory')->find($id);
+            return Product::with('category','subCategory')->find($id);
+        }else{
+            return [
+                'name' => $name,
+                'esImagen' => true
+            ];
+        }
+
+
     }
     function index(){
         return Product::with('category','subCategory')->get();
